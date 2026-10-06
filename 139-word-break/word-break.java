@@ -1,40 +1,70 @@
 class Solution {
     public boolean wordBreak(String s, List<String> wordDict) {
-        boolean[][] dp = new boolean[s.length()][2];
 
-        return match(s, wordDict, dp, 0);
+        Boolean[] dp = new Boolean[s.length() + 1];
+
+        return match(wordDict, s, 0,dp);
     }
+    /*
+    boolean match(List<String> wordDict, StringBuilder up, StringBuilder p) {
 
-    boolean match(String s, List<String> wordDict, boolean[][] dp, int start) {
-
-        // Entire string is matched
-        if (start == s.length()) {
+        // Nothing left to process
+        
+        if (up.isEmpty()) {
             return true;
         }
 
-        // Already calculated
-        if (dp[start][0]) {
-            return dp[start][1];
+        for (String word : wordDict) {
+
+            // Check whether the word is at the beginning of up
+            if (up.toString().startsWith(word)) {
+
+                // Choose
+                p.append(word);
+                up.delete(0, word.length());
+
+                // Explore
+                boolean result = match(wordDict, p, up);
+
+                if (result) {
+                    return true;
+                }
+
+                // Backtrack
+                p.delete(p.length() - word.length(), p.length());
+                up.insert(0, word);
+            }
         }
 
-        // Try every possible substring
-        for (int i = start + 1; i <= s.length(); i++) {
+        // No possible word could complete the string
+        return false;
+        
+    }*/
+    boolean match(List<String> wordDict, String s, int index,Boolean[] dp){
+        //i beginning of the unprocessed
 
-            String word = s.substring(start, i);
+        if (index == s.length()) {
+            return true;
+        }
 
-            if (wordDict.contains(word)) {
+        if(dp[index] != null){
+            return dp[index];
+        }
 
-                if (match(s, wordDict, dp, i)) {
-                    dp[start][0] = true;
-                    dp[start][1] = true;
+        for (String word : wordDict) {
+
+            if (s.startsWith(word,index)) {
+                boolean result = match(wordDict, s, index + word.length(),dp);
+                if (result) {
+                    dp[index] = true;
                     return true;
                 }
             }
         }
 
-        dp[start][0] = true;
-        dp[start][1] = false;
-
+        // No possible word could complete the string
+        dp[index]=false;
         return false;
+        
     }
 }
