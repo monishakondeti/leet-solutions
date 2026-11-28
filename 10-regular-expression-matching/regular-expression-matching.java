@@ -1,13 +1,18 @@
 class Solution {
     public boolean isMatch(String s, String p) {
-        return check(s,p,0,0);
+        Boolean[][] dp = new Boolean[s.length()+1][p.length()+1];
+        return check(s,p,0,0,dp);
     }
-    boolean check(String s,String p,int i,int j){
+    boolean check(String s,String p,int i,int j,Boolean[][] dp){
         if(j == p.length()){ //pattern is done means string also need to be done
             if(i == s.length()){
                 return true;
             } 
             return false;
+        }
+        //base condition for dp
+        if(dp[i][j] != null){
+            return dp[i][j];
         }
         boolean firstMatch = false;
         if(i<s.length()){
@@ -20,12 +25,14 @@ class Solution {
         //if * we have two cases zero occurances or many preceding occurances
         if(j+1<p.length() && p.charAt(j+1) =='*'){
             //many occurances is possible only when prev is c
-            return check(s,p,i,j+2) || firstMatch && check(s,p,i+1,j);
+            dp[i][j] = check(s,p,i,j+2,dp) || firstMatch && check(s,p,i+1,j,dp);
+            return dp[i][j];
         }else{
             if(firstMatch){
-                return check(s,p,i+1,j+1);
+                dp[i][j] = check(s,p,i+1,j+1,dp);
+                return dp[i][j];
             }else{
-                return false;
+                return dp[i][j] = false;
             }
         }
     }
