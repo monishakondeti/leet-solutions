@@ -10,29 +10,27 @@
  */
 class Solution {
     public ListNode partition(ListNode head, int x) {
-
-        ListNode small = new ListNode(0);
-        ListNode large = new ListNode(0);
-
-        ListNode s = small;
-        ListNode l = large;
-
-        while (head != null) {
-
-            if (head.val < x) {
-                s.next = head;
-                s = s.next;
-            } else {
-                l.next = head;
-                l = l.next;
+        ListNode smallHead = new ListNode(-1);
+        ListNode largeHead = new ListNode(-1);
+        ListNode curr1 = smallHead;
+        ListNode curr2 = largeHead;
+        ListNode temp2 = curr2;
+        ListNode temp = head;
+        while(temp!=null){
+            if(temp.val<x){
+                //add in small linked list
+                ListNode nn = new ListNode(temp.val);
+                curr1.next = nn;
+                curr1 = nn;
+            }else{
+                ListNode nn = new ListNode(temp.val);
+                curr2.next = nn;
+                curr2 = nn;
             }
-
-            head = head.next;
+            temp=temp.next;
         }
-
-        l.next = null;
-        s.next = large.next;
-
-        return small.next;
+        //now join small and large ll
+        curr1.next = temp2.next;
+        return smallHead.next;
     }
 }
